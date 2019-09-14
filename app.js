@@ -13,10 +13,12 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', (err) => {
 });
 
 // Importar rutas
-var appRoutes = require('./routes/app');
+var appRoute = require('./routes/app');
+var usuarioRoute = require('./routes/usuario');
 
 // Rutas
-app.use('/', appRoutes);
+app.use('/usuario', usuarioRoute);
+app.use('/', appRoute);
 
 // Escuchar peticiones
 app.listen(PORT, () => {
