@@ -1,4 +1,5 @@
 var express = require('express');
+var bcrypt = require('bcryptjs');
 
 var app = express();
 
@@ -34,24 +35,76 @@ app.post('/', (req, res) => {
     var usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
-        password: body.password
+        password: bcrypt.hashSync(body.password, 10),
+        img: body.img,
+        role: body.role
     });
 
     usuario.save((err, usuarioGuardado) => {
         if (err) {
-            return res.status(500).json({
+            return res.status(400).json({
                 ok: false,
                 mensaje: 'Error al guardar usuario',
                 errors: err
             });
         }
 
+        usuarioGuardado.password = '******';
         return res.status(200).json({
-            ok: false,
+            ok: true,
             usuario: usuarioGuardado,
             mensaje: 'Usuario guardado exitosamente'
         });
     });
+});
+
+// ==============================================
+// Actualizar usuario por ID
+// ==============================================
+app.put('/:id', (req, res) => {
+    var id = req.params.id;
+    var body = req.body;
+
+    Usuario.findById(id)
+        .exec((err, usuarioDB) => {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al buscar usuario',
+                    errors: err
+                });
+            }
+
+            if (!usuarioDB) {
+                return res.status(404).json({
+                    ok: false,
+                    mensaje: `No se encontró usuario con el ID: ${ id }`,
+                    errors: {
+                        message: 'No se encontró usuario con el ID'
+                    }
+                });
+            }
+
+            usuarioDB.nombre = body.nombre;
+            usuarioDB.email = body.email;
+            usuarioDB.role = body.role;
+
+            usuarioDB.save((err, usuarioActualizado) => {
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error al actualizar usuario',
+                        errors: err
+                    });
+                }
+
+                return res.status(200).json({
+                    ok: true,
+                    usuario: usuarioActualizado,
+                    mensaje: 'Usuario actualizado exitosamente'
+                });
+            });
+        });
 });
 
 module.exports = app;

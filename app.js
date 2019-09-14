@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 3000;
 // Inicializar variables
 var app = express();
 
+// Body-parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
