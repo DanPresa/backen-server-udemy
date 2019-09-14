@@ -65,7 +65,7 @@ app.put('/:id', (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
-    Usuario.findById(id)
+    Usuario.findById({ _id: id }, '-password')
         .exec((err, usuarioDB) => {
             if (err) {
                 return res.status(400).json({
@@ -103,6 +103,39 @@ app.put('/:id', (req, res) => {
                     usuario: usuarioActualizado,
                     mensaje: 'Usuario actualizado exitosamente'
                 });
+            });
+        });
+});
+
+// ==============================================
+// Borrar usuario por ID
+// ==============================================
+app.delete('/:id', (req, res) => {
+    var id = req.params.id;
+
+    Usuario.findByIdAndRemove(id)
+        .exec((err, usuarioDB) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Erro al borrar usuario',
+                    errors: err
+                });
+            }
+
+            if (!usuarioDB) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: `No se encontró usuario con el ID: ${ id }`,
+                    errors: {
+                        message: 'No se encontró usuario con ese ID'
+                    }
+                });
+            }
+            return res.status(200).json({
+                ok: false,
+                usuario: usuarioDB,
+                mensaje: 'Usuario borrado exitosamente'
             });
         });
 });
