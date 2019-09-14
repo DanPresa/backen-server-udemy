@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 var app = express();
 
 var Usuario = require('../models/usuario');
+var SEED = require('../config/config').SEED;
 
 app.post('/', (req, res) => {
     var body = req.body;
@@ -12,7 +13,7 @@ app.post('/', (req, res) => {
     Usuario.findOne({ email: body.email })
         .exec((err, usuarioDB) => {
             if (err) {
-                return res.status(404).json({
+                return res.status(400).json({
                     ok: false,
                     mensaje: 'Error buscar usuario',
                     errors: err
@@ -20,14 +21,14 @@ app.post('/', (req, res) => {
             }
 
             if (!usuarioDB) {
-                return res.status(400).json({
+                return res.status(404).json({
                     ok: false,
                     mensaje: 'Credenciales incorrectas - email'
                 });
             }
 
             if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
-                return res.status(400).json({
+                return res.status(404).json({
                     ok: false,
                     mensaje: 'Credenciales incorrectas - password'
                 });
@@ -35,7 +36,7 @@ app.post('/', (req, res) => {
 
             // Crear token
             usuarioDB.password = '******';
-            var token = jwt.sign({ usuario: usuarioDB }, 'seed-hospitaldb', { expiresIn: 14400 }); // 4 hrs
+            var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 }); // 4 hrs
 
             return res.status(200).json({
                 ok: true,

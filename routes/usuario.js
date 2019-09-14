@@ -1,6 +1,8 @@
 var express = require('express');
 var bcrypt = require('bcryptjs');
 
+var mdAutenticacion = require('../middleware/autenticacion');
+
 var app = express();
 
 var Usuario = require('../models/usuario');
@@ -29,7 +31,7 @@ app.get('/', (req, res) => {
 // ==============================================
 // Guardar usuario
 // ==============================================
-app.post('/', (req, res) => {
+app.post('/', mdAutenticacion.verificaToken, (req, res) => {
     var body = req.body;
 
     var usuario = new Usuario({
@@ -53,7 +55,8 @@ app.post('/', (req, res) => {
         return res.status(200).json({
             ok: true,
             usuario: usuarioGuardado,
-            mensaje: 'Usuario guardado exitosamente'
+            mensaje: 'Usuario guardado exitosamente',
+            usuarioToken: req.usuario
         });
     });
 });
@@ -61,7 +64,7 @@ app.post('/', (req, res) => {
 // ==============================================
 // Actualizar usuario por ID
 // ==============================================
-app.put('/:id', (req, res) => {
+app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
@@ -110,7 +113,7 @@ app.put('/:id', (req, res) => {
 // ==============================================
 // Borrar usuario por ID
 // ==============================================
-app.delete('/:id', (req, res) => {
+app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
 
     Usuario.findByIdAndRemove(id)
