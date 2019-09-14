@@ -28,9 +28,11 @@ mongoose.connect('mongodb://localhost:27017/hospitalDB', {
 // Importar rutas
 var appRoute = require('./routes/app');
 var usuarioRoute = require('./routes/usuario');
+var loginRoute = require('./routes/login');
 
 // Rutas
 app.use('/usuario', usuarioRoute);
+app.use('/login', loginRoute);
 app.use('/', appRoute);
 
 // Escuchar peticiones
