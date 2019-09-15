@@ -35,7 +35,6 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
 
     var hospital = new Hospital({
         nombre: body.nombre,
-        img: body.img,
         usuario: req.usuario._id
     });
 
@@ -84,6 +83,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
         hospitalDB.nombre = body.nombre;
         hospitalDB.usuario = req.usuario._id;
+
         hospitalDB.save((err, hospitalActualizado) => {
             if (err) {
                 return res.status(400).json({

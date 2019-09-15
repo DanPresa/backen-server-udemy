@@ -17,6 +17,7 @@ var appRoute = require('./routes/app');
 var usuarioRoute = require('./routes/usuario');
 var loginRoute = require('./routes/login');
 var hospitalRoute = require('./routes/hospital');
+var medicoRoutes = require('./routes/medico');
 
 // Conexión a la DB
 mongoose.set('useCreateIndex', true);
@@ -34,6 +35,7 @@ mongoose.connect('mongodb://localhost:27017/hospitalDB', {
 // Rutas
 app.use('/usuario', usuarioRoute);
 app.use('/hospital', hospitalRoute);
+app.use('/medico', medicoRoutes);
 app.use('/login', loginRoute);
 app.use('/', appRoute);
 
