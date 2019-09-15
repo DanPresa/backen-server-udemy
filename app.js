@@ -12,6 +12,12 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Importar rutas
+var appRoute = require('./routes/app');
+var usuarioRoute = require('./routes/usuario');
+var loginRoute = require('./routes/login');
+var hospitalRoute = require('./routes/hospital');
+
 // Conexión a la DB
 mongoose.set('useCreateIndex', true);
 mongoose.connect('mongodb://localhost:27017/hospitalDB', {
@@ -25,13 +31,9 @@ mongoose.connect('mongodb://localhost:27017/hospitalDB', {
         if (err) throw err;
     });
 
-// Importar rutas
-var appRoute = require('./routes/app');
-var usuarioRoute = require('./routes/usuario');
-var loginRoute = require('./routes/login');
-
 // Rutas
 app.use('/usuario', usuarioRoute);
+app.use('/hospital', hospitalRoute);
 app.use('/login', loginRoute);
 app.use('/', appRoute);
 

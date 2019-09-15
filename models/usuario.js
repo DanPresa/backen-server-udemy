@@ -13,7 +13,7 @@ var usuarioSchema = new Schema({
     password: { type: String, required: [true, 'La contraseña es necesaria'] },
     img: { type: String, required: false },
     role: { type: String, default: 'ROLE_USER', required: true, enum: rolesValidos }
-});
+}, { collection: 'usuarios' });
 
 usuarioSchema.plugin(uniqueValidator, { message: 'El {PATH} ya está registrado' });
 
