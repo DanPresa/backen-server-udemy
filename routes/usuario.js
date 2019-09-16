@@ -1,5 +1,6 @@
 var express = require('express');
 var bcrypt = require('bcryptjs');
+var fs = require('fs');
 
 var mdAutenticacion = require('../middleware/autenticacion');
 
@@ -137,6 +138,11 @@ app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
                         message: 'No se encontró usuario con ese ID'
                     }
                 });
+            }
+
+            var imgPath = `./uploads/usuarios/${ usuarioDB.img }`;
+            if (fs.existsSync(imgPath)) {
+                fs.unlinkSync(imgPath);
             }
             return res.status(200).json({
                 ok: false,

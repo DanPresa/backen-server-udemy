@@ -131,6 +131,11 @@ app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
                 });
             }
 
+            var imgPath = `./uploads/hospitales/${ hospitalDB.img }`;
+            if (fs.existsSync(imgPath)) {
+                fs.unlinkSync(imgPath);
+            }
+
             return res.status(200).json({
                 ok: true,
                 hospital: hospitalDB

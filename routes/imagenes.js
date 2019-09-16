@@ -16,11 +16,6 @@ app.get('/:tipo/:img', (req, res, next) => {
         var noImagePath = path.resolve(__dirname, `../assets/noimage.png`);
         res.sendFile(noImagePath);
     }
-
-    /* res.status(200).json({
-        ok: false,
-        mensaje: 'Petición realizada exitosamente'
-    }); */
 });
 
 module.exports = app;
