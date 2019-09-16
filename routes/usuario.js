@@ -11,14 +11,8 @@ var Usuario = require('../models/usuario');
 // Obtener todos los usuarios
 // ==============================================
 app.get('/', (req, res) => {
-    var desde = req.query.desde || 0;
-    var limite = req.query.limite || 5;
-    desde = Number(desde);
-    limite = Number(limite);
 
     Usuario.find({}, '-password')
-        .skip(desde)
-        .limit(limite)
         .exec((err, usuarios) => {
             if (err) {
                 return res.status(500).json({
@@ -48,7 +42,6 @@ app.post('/', (req, res) => {
         nombre: body.nombre,
         email: body.email,
         password: bcrypt.hashSync(body.password, 10),
-        img: body.img,
         role: body.role
     });
 

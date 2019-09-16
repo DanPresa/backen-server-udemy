@@ -9,14 +9,7 @@ var Hospital = require('../models/hospital');
 // Obtener todos los hospitales
 // ==============================================
 app.get('/', (req, res) => {
-    var desde = req.query.desde || 0;
-    var limite = req.query.limite || 5;
-    desde = Number(desde);
-    limite = Number(limite);
-
     Hospital.find({})
-        .skip(desde)
-        .limit(limite)
         .populate('usuario', '-password -role')
         .exec((err, hospitales) => {
             if (err) {

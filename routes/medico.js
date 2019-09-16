@@ -10,14 +10,7 @@ var Medico = require('../models/medico');
 // Obtener todos los medicos
 // ==============================================
 app.get('/', (req, res) => {
-    var desde = req.query.desde || 0;
-    var limite = req.query.limite || 5;
-    desde = Number(desde);
-    limite = Number(limite);
-
     Medico.find({})
-        .skip(desde)
-        .limit(limite)
         .populate('usuario', '-password -role')
         .populate('hospital', 'nombre')
         .exec((err, medicos) => {
