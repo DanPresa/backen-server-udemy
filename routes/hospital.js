@@ -138,7 +138,8 @@ app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
             return res.status(200).json({
                 ok: true,
-                hospital: hospitalDB
+                hospital: hospitalDB,
+                mensaje: 'Hospital borrado exitosamente'
             });
         });
 });
