@@ -11,7 +11,14 @@ var Usuario = require('../models/usuario');
 // Obtener todos los usuarios
 // ==============================================
 app.get('/', (req, res) => {
+    var desde = req.query.desde || 0;
+    var limite = req.query.limite || 5;
+    desde = Number(desde);
+    limite = Number(limite);
+
     Usuario.find({}, '-password')
+        .skip(desde)
+        .limit(limite)
         .exec((err, usuarios) => {
             if (err) {
                 return res.status(500).json({
@@ -21,9 +28,12 @@ app.get('/', (req, res) => {
                 });
             }
 
-            return res.status(200).json({
-                ok: true,
-                usuarios: usuarios
+            Usuario.count({}, (err, conteo) => {
+                return res.status(200).json({
+                    ok: true,
+                    usuarios: usuarios,
+                    totalUsuarios: conteo
+                });
             });
         });
 });
@@ -68,7 +78,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
-    Usuario.findById({ _id: id }, '-password')
+    Usuario.findById(id, '-password')
         .exec((err, usuarioDB) => {
             if (err) {
                 return res.status(400).json({

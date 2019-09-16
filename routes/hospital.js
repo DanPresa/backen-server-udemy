@@ -9,8 +9,15 @@ var Hospital = require('../models/hospital');
 // Obtener todos los hospitales
 // ==============================================
 app.get('/', (req, res) => {
+    var desde = req.query.desde || 0;
+    var limite = req.query.limite || 5;
+    desde = Number(desde);
+    limite = Number(limite);
+
     Hospital.find({})
-        .populate('usuario', '-password')
+        .skip(desde)
+        .limit(limite)
+        .populate('usuario', '-password -role')
         .exec((err, hospitales) => {
             if (err) {
                 return res.status(500).json({
@@ -20,9 +27,12 @@ app.get('/', (req, res) => {
                 });
             }
 
-            return res.status(200).json({
-                ok: true,
-                hospitales: hospitales
+            Hospital.count({}, (err, conteo) => {
+                return res.status(200).json({
+                    ok: true,
+                    hospitales: hospitales,
+                    totalHospitales: conteo
+                });
             });
         });
 });
