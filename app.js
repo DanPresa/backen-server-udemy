@@ -20,6 +20,7 @@ var hospitalRoute = require('./routes/hospital');
 var medicoRoutes = require('./routes/medico');
 var busquedaRoute = require('./routes/busqueda');
 var uploadRoute = require('./routes/upload');
+var imgRoute = require('./routes/imagenes');
 
 // Conexión a la DB
 mongoose.set('useCreateIndex', true);
@@ -40,6 +41,7 @@ app.use('/hospital', hospitalRoute);
 app.use('/medico', medicoRoutes);
 app.use('/busqueda', busquedaRoute);
 app.use('/upload', uploadRoute);
+app.use('/img', imgRoute);
 app.use('/login', loginRoute);
 app.use('/', appRoute);
 
