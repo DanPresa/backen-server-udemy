@@ -63,14 +63,7 @@ app.post('/google', async(req, res) => {
                     mensaje: 'Debe de usar su autenticación normal',
                 });
             } else {
-                var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 }); // 4 hrs
-
-                return res.status(200).json({
-                    ok: true,
-                    usuario: usuarioDB,
-                    token: token,
-                    id: usuarioDB._id
-                });
+                response(usuarioDB, res);
             }
         } else {
             // Usuario no existe... hay que crearlo
@@ -83,14 +76,7 @@ app.post('/google', async(req, res) => {
             });
 
             usuario.save((err, usuarioDB) => {
-                var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 }); // 4 hrs
-
-                return res.status(200).json({
-                    ok: true,
-                    usuario: usuarioDB,
-                    token: token,
-                    id: usuarioDB._id
-                });
+                response(usuarioDB, res);
             });
         }
     });
@@ -134,15 +120,20 @@ app.post('/', (req, res) => {
 
             // Crear token
             usuarioDB.password = '******';
-            var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 }); // 4 hrs
 
-            return res.status(200).json({
-                ok: true,
-                usuario: usuarioDB,
-                token: token,
-                id: usuarioDB._id
-            });
+            response(usuarioDB, res);
         });
 });
+
+function response(usuarioDB, res) {
+    var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 }); // 4 hrs
+
+    return res.status(200).json({
+        ok: true,
+        usuario: usuarioDB,
+        token: token,
+        id: usuarioDB._id
+    });
+}
 
 module.exports = app;

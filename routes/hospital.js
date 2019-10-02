@@ -1,4 +1,5 @@
 var express = require('express');
+var fs = require('fs');
 
 var mdAutenticacion = require('../middleware/autenticacion');
 
@@ -26,6 +27,38 @@ app.get('/', (req, res) => {
                     hospitales: hospitales,
                     totalHospitales: conteo
                 });
+            });
+        });
+});
+
+// ==============================================
+// Obtener hospital por id
+// ==============================================
+app.get('/:id', (req, res) => {
+    var id = req.params.id;
+
+    Hospital.findById(id)
+        .populate('usuario', '-password')
+        .exec((err, hospital) => {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al buscar hospital',
+                    errors: err
+                });
+            }
+
+            if (!hospital) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: `No se econtró hospital con el id: ${ id }`,
+                    errors: 'No existe un hospital con ese id'
+                });
+            }
+
+            return res.status(200).json({
+                ok: true,
+                hospital: hospital
             });
         });
 });
@@ -98,7 +131,8 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
             return res.status(200).json({
                 ok: true,
-                hospital: hospitalActualizado
+                hospital: hospitalActualizado,
+                mensaje: 'Hospital actualizado'
             });
         });
     });
@@ -139,7 +173,7 @@ app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
             return res.status(200).json({
                 ok: true,
                 hospital: hospitalDB,
-                mensaje: 'Hospital borrado exitosamente'
+                mensaje: 'Hospital borrado'
             });
         });
 });
